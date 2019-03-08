@@ -1,44 +1,44 @@
 import numpy as np
 import nltk
 
-def languageModelingScoring(query, document, vocabulary):
-    ''' Gives the socring of the document according to the query using a language Modelling approach.
-        For now, it does not implement the query expansion using pseudo relevance feedback and wikipedia
-        in order to build the baseline.
-    '''
+# def languageModelingScoring(query, document, vocabulary):
+#     ''' Gives the socring of the document according to the query using a language Modelling approach.
+#         For now, it does not implement the query expansion using pseudo relevance feedback and wikipedia
+#         in order to build the baseline.
+#     '''
 
-    # Since the documents priors are uniform, we don't need to take it into account
-    # First get all the words of the query in lower case and without punctuation
-    querySplit =  nltk.word_tokenize(query)
-    querySplit = [word.lower() for word in querySplit if word.isalpha()]
+#     # Since the documents priors are uniform, we don't need to take it into account
+#     # First get all the words of the query in lower case and without punctuation
+#     querySplit =  nltk.word_tokenize(query)
+#     querySplit = [word.lower() for word in querySplit if word.isalpha()]
 
-    # Then we get the model of the query
-    queryModel = {word : (querySplit.count(word) / len(querySplit)) for word in set(querySplit)}
-    print(queryModel)
+#     # Then we get the model of the query
+#     queryModel = {word : (querySplit.count(word) / len(querySplit)) for word in set(querySplit)}
+#     print(queryModel)
 
-    # We create the same kind of model for the document
-    documentModel = documentModelSmoothed(document, vocabulary, 100)
+#     # We create the same kind of model for the document
+#     documentModel = documentModelSmoothed(document, vocabulary, 100)
 
     
 
 
 
-def documentModelSmoothed(document, vocabulary, mu):
-    ''' Return The language model of the document smoothed by using dirichlet smoothing.
-        Still need to apply the smoothing on the fly for words that are not in the documents.
-    '''
+# def documentModelSmoothed(document, vocabulary, mu):
+#     ''' Return The language model of the document smoothed by using dirichlet smoothing.
+#         Still need to apply the smoothing on the fly for words that are not in the documents.
+#     '''
 
-    # We get all the words in the document
-    documentSplit = nltk.word_tokenize(document)
-    documentSplit = [word.lower() for word in document if word.isalpha()]
+#     # We get all the words in the document
+#     documentSplit = nltk.word_tokenize(document)
+#     documentSplit = [word.lower() for word in document if word.isalpha()]
 
-    documentModel = {}
-    # We calculate the proba for each word
-    for word in set(documentSplit):
-        resultProba += (documentSplit.count(word) + mu * vocabulary(word)) / (len(documentSplit) + mu)
-        documentModel[word] = resultProba
+#     documentModel = {}
+#     # We calculate the proba for each word
+#     for word in set(documentSplit):
+#         resultProba += (documentSplit.count(word) + mu * vocabulary(word)) / (len(documentSplit) + mu)
+#         documentModel[word] = resultProba
 
-    return documentModel
+#     return documentModel
 
 
 def evaluationPrecision(rankingRelevance):
