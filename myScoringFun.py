@@ -1,5 +1,6 @@
 import numpy as np
 import json
+import string
 from utils import *
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Document, Date, Nested, Boolean, \
@@ -72,7 +73,34 @@ def tokenizeQuery(query,es):
     return result
 
 
-def wikiScoringMethod(query,doc_id,es,queryCollectionCount,queryTerms):
+def probaQueryGivenDocument(queryTerms,doc):
+    ''' return P(Q|D) '''
+    result = 1
+    lenDoc = sum([i.strip(string.punctuation).isalpha() for i in doc.split()])
+    for term in queryTerms:
+        result = result * (doc.count(term) / lenDoc)
+    return result
+
+
+def probaTermInDoc(term, doc):
+    ''' Return P(t|D) for relevant documents  '''
+
+    lenDoc = sum([i.strip(string.punctuation).isalpha() for i in doc.split()])
+    return doc.count(term) / lenDoc
+
+
+def probaTermExtendedRelevantDoc(term,listDoc,probaQueryDocList):
+    ''' return P(t | 0q) '''
+    result = 0
+    for i in range(len(listDoc)):
+        result += probaTermInDoc(term,listDoc[i]) * probaQueryDocList[i]
+    if result != 0:
+        return result/len(listDoc)
+    else:
+        return result
+    
+
+def wikiScoringMethod(query,doc_id,lambdaParam,es,queryCollectionCount,queryTerms,relevantDoc):
     ''' Scoring function of the paper (simplified for now) 
         Given a query and a doc id, recalculate the score of that document
         We assume equal priors here'''
@@ -84,13 +112,20 @@ def wikiScoringMethod(query,doc_id,es,queryCollectionCount,queryTerms):
     #queryCollectionCount = getQueryCollectionCount(set(queryTerms),es)
     docSize = getDocSize(docStats)
 
+    # We construct the proba of the qury per document:
+    probaQueryDoc = []
+    for doc in relevantDoc:
+        probaQueryDoc.append(probaQueryGivenDocument(queryTerms,doc))
+    
+
     # We apply the formula
     for t in set(queryTerms):
         dirichSmooth = dirichletSmoothing(t,docStats,200,docSize,queryCollectionCount)
         if dirichSmooth != 0:
-            result += probabilityTermInQuery(t,queryTerms) * np.log(dirichSmooth)
+            probaTerm = lambdaParam * probabilityTermInQuery(t,queryTerms) + (1 -lambdaParam) * probaTermExtendedRelevantDoc(t, relevantDoc, probaQueryDoc)
+            result += probaTerm * np.log(dirichSmooth)
         else:
-            result = 0
+            result = -10000
 
     return result
 

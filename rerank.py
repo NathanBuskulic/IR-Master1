@@ -1,6 +1,7 @@
 import numpy as np
 from myScoringFun import wikiScoringMethod, tokenizeQuery, getQueryCollectionCount
 from elasticsearch import Elasticsearch
+import wikipedia as wkp
 
 def rerank(query,previousRanking,es):
     ''' Given a rannking, rerank all the documents accordingly to the new wikiScoreFunction  '''
@@ -10,11 +11,14 @@ def rerank(query,previousRanking,es):
 
     queryTerms = tokenizeQuery(query,es)
     queryCollectionCount = getQueryCollectionCount(set(queryTerms),es)
+
+    # get RelevantDoc
+    relevantDoc = getRelevantDoc(query)
     
     resultWithScore = []
     # We calculate all the new scores
     for id in idOfRanking:
-        resultWithScore.append((id,wikiScoringMethod(query,id,es,queryCollectionCount,queryTerms)))
+        resultWithScore.append((id,wikiScoringMethod(query,id,0.5,es,queryCollectionCount,queryTerms,relevantDoc)))
 
     # We sort everything out
     print(resultWithScore)
@@ -29,6 +33,22 @@ def getListFromRanking(ranking):
     for i in range(len(listRanking)):
         result.append(listRanking[i]['_id'])
     return result
+
+
+def getRelevantDoc(query):
+    ''' Return relevant document from wikipedia '''
+    # For now take the two first results of wikipedia
+    print(query)
+    resultsWkp = wkp.search(query,results=2)
+    print(resultsWkp)
+    docs = []
+    for title in resultsWkp:
+        docs.append(wkp.page(title).content)
+
+    return docs
+
+
+    
 
 ES_HOST = {"host" : "localhost", "port" : 9200}
 es = Elasticsearch(hosts = [ES_HOST], timeout=300)

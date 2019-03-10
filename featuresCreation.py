@@ -24,6 +24,13 @@ def SPR(query,wkpage):
     print(allOcc)
     return allOcc[len(allOcc) - 1] - allOcc[0]
 
+def allPos(query, wkpage):
+    allOcc = find_all(wkpage,query)
+    return [i/len(wkpage) for i in allOcc]
+
+def QCT(query,wkage):
+    return wkpage.fin
+
 wkpage = "test test test testtest"
 query = "test"
 print(SPR(query,wkpage))
