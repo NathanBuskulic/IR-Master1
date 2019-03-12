@@ -7,9 +7,9 @@ from utils import getTopics
 myTopics = getTopics("topics.txt")
 
 # start to write the file
-flux = open("queryToWk.txt","w")
-flux.write("")
-flux.close()
+#flux = open("queryToWk.txt","w")
+#flux.write("")
+#flux.close()
 
 for i in myTopics:
     query = myTopics[i]
