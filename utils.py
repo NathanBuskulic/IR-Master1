@@ -258,6 +258,38 @@ def getRelevancePilotRun(fileName):
     return result
 
 
+def getAllDocumentFromFile(fullDoc):
+    ''' return a list of tuple [(),()] with first item being docno, second, the content '''
+
+    result = []
+    beginIndex = fullDoc.find('<DOCNO>')
+    while beginIndex != -1:
+        endIndex = fullDoc.find('</DOCNO>')
+        title = fullDoc[beginIndex + len('</DOCNO>')-1:endIndex]
+
+        fullDoc = fullDoc[endIndex+len("</DOCNO>"):]
+        
+        beginIndexContent = fullDoc.find("</DOCHDR>")
+        beginIndex = fullDoc.find('<DOCNO>')
+
+        if beginIndex != -1:
+            content = fullDoc[beginIndexContent + len("</DOCHDR>"):beginIndex]
+        else:
+            content = fullDoc[beginIndexContent + len("</DOCHDR>"):]
+
+        result.append((title,content))
+
+    return result
+
+
+#fl = open("89.txt","rb")
+#doc = fl.read().decode("utf-8", errors='ignore')
+#a = getAllDocumentFromFile(doc)
+#print(a[5][0])
+#print(len(a))
+            
+
+
 #a = getRelevancePilotRun("cran/cranqrel")
 #print(a)
 #a = getQueriesPilotRun("cran/cran.qry")
@@ -267,3 +299,6 @@ def getRelevancePilotRun(fileName):
 #print(len(a[701]))
 #languageModelingScoring("Je suis une une une phrase qui se phrase repete","")
     
+
+#<DOCNO></DOCNO>
+#</DOCHDR>
