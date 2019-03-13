@@ -98,7 +98,7 @@ def evaluationMRR(listRR):
 
     return np.mean(listRR)
 
-def getRelevanceJudgement(relevanceFile):
+def getRelevanceJudgement(relevanceFile,es):
     ''' Get the relevance judgement from a file and format them into the format :
         {topic1 : [docRelevant1, docRelevant2], topic2 : [docRelevant1, docRelevant2]}
     '''
@@ -109,16 +109,19 @@ def getRelevanceJudgement(relevanceFile):
     for line in flux:
         # split the line in [TOPIC, ITERATION, DOCNO, RELEVANCY]
         splitLine = line.split(' ')
+        docNo = splitLine[2]
+        
+        if es.exists(index="my_index", id=docNo):
 
         # if the document is relevant
-        if int(splitLine[3][:-1]) != 0:
-            # We add it to the dictionnary of relevant result
-            topic = int(splitLine[0])
-            docno = splitLine[2]
-            if topic in result:
-                result[topic].append(docno)
-            else:
-                result[topic] = [docno]
+            if int(splitLine[3][:-1]) != 0:
+                # We add it to the dictionnary of relevant result
+                topic = int(splitLine[0])
+                docno = splitLine[2]
+                if topic in result:
+                    result[topic].append(docno)
+                else:
+                    result[topic] = [docno]
 
     flux.close()
     return result

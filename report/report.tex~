@@ -1,0 +1,54 @@
+\documentclass[sigconf]{acmart}
+
+\usepackage{booktabs} % For formal tables
+\usepackage{natbib}
+\usepackage{float}
+\usepackage{subfig}
+\usepackage{balance}
+
+
+% Copyright
+%\setcopyright{none}
+%\setcopyright{acmcopyright}
+%\setcopyright{acmlicensed}
+\setcopyright{rightsretained}
+%\setcopyright{usgov}
+%\setcopyright{usgovmixed}
+%\setcopyright{cagov}
+%\setcopyright{cagovmixed}
+
+\settopmatter{printacmref=false} % Removes citation information below abstract
+\renewcommand\footnotetextcopyrightpermission[1]{} % removes footnote with conference information in first column
+\pagestyle{plain} % removes running headers
+
+
+
+\begin{document}
+\title{Report IR}
+\subtitle{Group 31}
+
+
+\author{Nathan Buskulic \\ 4947916}
+%\affiliation{
+  %\institution{Tu Delft}
+%}
+%\email{n.m.m.buskulic@student.tudelft.nl}
+
+\author{Marjolein Knijff \\ 4153634}
+%\affiliation{
+  %\institution{Tu Delft}
+%}
+%\email{n.m.m.buskulic@student.tudelft.nl}
+
+
+\maketitle
+
+\input{body.tex}
+
+ALLO
+
+\balance
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{biblio} 
+
+\end{document}

@@ -10,10 +10,10 @@ from elasticsearch_dsl import Document, Date, Nested, Boolean, \
 ES_HOST = {"host" : "localhost", "port" : 9200}
 es = Elasticsearch(hosts = [ES_HOST], timeout=300)
 
-relevanceJudg = getRelevancePilotRun("cran/cranqrel")
+relevanceJudg = getRelevanceJudgement("qrel.txt",es)
 statisticResult = {'P@10':[],'AvP':[],'RR':[],'Recall':[]}
 
-queries = getQueriesPilotRun("cran/cran.qry")
+queries = getTopics("topics.txt")
 queries = {i : queries[i] for i in queries if i <= 225}
 for i in queries:
     # We get the first pass of result
