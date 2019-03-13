@@ -14,7 +14,7 @@ relevanceJudg = getRelevanceJudgement("qrel.txt",es)
 statisticResult = {'P@10':[],'AvP':[],'RR':[],'Recall':[]}
 
 queries = getTopics("topics.txt")
-queries = {i : queries[i] for i in queries if i <= 225}
+#queries = {i : queries[i] for i in queries if i <= 225}
 for i in queries:
     # We get the first pass of result
     result = es.search(index='my_index',doc_type="_doc",explain=False,_source=False,size=100,body={'query':{'match': {"content" : queries[i]}}})
@@ -25,7 +25,8 @@ for i in queries:
     relevanceRank = []
     for j in range(0,10):
         # Create the relevance ranking
-        relevanceRank.append(int(int(result[j]) in relevanceJudg[i]))
+        relevanceRank.append(int(result[j] in relevanceJudg[i]))
+        #relevanceRank.append(int(int(result[j]) in relevanceJudg[i]))
     print(relevanceRank)
 
     statisticResult['P@10'].append(evaluationPrecision(relevanceRank))
