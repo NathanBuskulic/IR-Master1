@@ -22,7 +22,7 @@ def rerank(query,previousRanking,es):
     resultWithScore = []
     # We calculate all the new scores
     for id in idOfRanking:
-        resultWithScore.append((id,wikiScoringMethod(query,id,0.5,es,queryCollectionCount,queryTerms,relevantDoc)))
+        resultWithScore.append((id,wikiScoringMethod(query,id,0.3,es,queryCollectionCount,queryTerms,relevantDoc)))
 
     # We sort everything out
     print(resultWithScore)
@@ -74,7 +74,7 @@ def getRelevantDoc(query,es):
     (X,Y) = getTrainingDataset("trainingDataset.txt") 
     clf = SVC(gamma='auto')
     clf.fit(X,Y)
-    print("TRAINED !")
+    print("TRAINED!")
 
     relevDoc = []
     # get the relevant documents
@@ -88,7 +88,7 @@ def getRelevantDoc(query,es):
             #print(featVec)
             pred = clf.predict(featVec)
             if pred == 1:
-                print("YOUHOU")
+                print("SVM predicted document to be relevant")
                 relevDoc.append(wkPage)
         except wkp.exceptions.DisambiguationError:
             pass

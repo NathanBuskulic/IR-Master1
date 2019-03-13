@@ -117,7 +117,6 @@ def getTrainingDataset(fileName,es):
 
                 # get the label
                 if i in relevantPositions:
-                    print("yes")
                     Y.append(1)
                 else:
                     Y.append(0)

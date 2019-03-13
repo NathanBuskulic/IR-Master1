@@ -111,7 +111,7 @@ def getRelevanceJudgement(relevanceFile,es):
         splitLine = line.split(' ')
         docNo = splitLine[2]
         
-        if es.exists(index="my_index", id=docNo):
+        if es.exists(index="my_index", id=docNo, doc_type="_doc"):
 
         # if the document is relevant
             if int(splitLine[3][:-1]) != 0:
